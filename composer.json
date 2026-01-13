@@ -1,0 +1,13 @@
+{
+    "name": "platform/lists",
+    "description": "Listen-Modul für die Platform",
+    "type": "library",
+    "require": {
+        "php": "^8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Platform\\Lists\\": "src/"
+        }
+    }
+}
