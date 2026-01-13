@@ -8,7 +8,7 @@ use Platform\Lists\Models\ListsList;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Computed;
 
-class List extends Component
+class ListItem extends Component
 {
     public ListsList $list;
 

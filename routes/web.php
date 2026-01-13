@@ -2,7 +2,7 @@
 
 use Platform\Lists\Livewire\Board;
 use Platform\Lists\Livewire\Dashboard;
-use Platform\Lists\Livewire\List as ListComponent;
+use Platform\Lists\Livewire\ListItem;
 use Platform\Lists\Models\ListsBoard;
 use Platform\Lists\Models\ListsList;
 
@@ -13,5 +13,5 @@ Route::get('/boards/{listsBoard}', Board::class)
     ->name('lists.boards.show');
 
 // List Routes
-Route::get('/lists/{listsList}', ListComponent::class)
+Route::get('/lists/{listsList}', ListItem::class)
     ->name('lists.lists.show');
