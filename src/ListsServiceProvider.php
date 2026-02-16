@@ -136,6 +136,13 @@ class ListsServiceProvider extends ServiceProvider
             $registry->register(new \Platform\Lists\Tools\GetListTool());
             $registry->register(new \Platform\Lists\Tools\UpdateListTool());
             $registry->register(new \Platform\Lists\Tools\DeleteListTool());
+
+            // Item-Tools
+            $registry->register(new \Platform\Lists\Tools\CreateItemTool());
+            $registry->register(new \Platform\Lists\Tools\ListItemsTool());
+            $registry->register(new \Platform\Lists\Tools\UpdateItemTool());
+            $registry->register(new \Platform\Lists\Tools\DeleteItemTool());
+            $registry->register(new \Platform\Lists\Tools\ToggleItemTool());
         } catch (\Throwable $e) {
             // Silent fail - Tool-Registry könnte nicht verfügbar sein
         }
