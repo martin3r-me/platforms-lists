@@ -13,7 +13,7 @@ class Board extends Component
 
     public function mount(ListsBoard $listsBoard)
     {
-        $this->board = $listsBoard;
+        $this->board = $listsBoard->fresh()->load('lists');
         
         // Berechtigung prüfen
         $this->authorize('view', $this->board);
@@ -23,6 +23,22 @@ class Board extends Component
     public function updateBoard()
     {
         $this->board->refresh();
+        $this->board->load('lists');
+    }
+
+    public function updateListOrder($items)
+    {
+        $this->authorize('update', $this->board);
+        
+        foreach ($items as $item) {
+            $list = $this->board->lists()->find($item['value']);
+            if ($list) {
+                $list->update(['order' => $item['order']]);
+            }
+        }
+        
+        $this->board->refresh();
+        $this->board->load('lists');
     }
 
     public function createList()

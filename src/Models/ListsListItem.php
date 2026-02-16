@@ -7,18 +7,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\Uid\UuidV7;
 use Platform\Core\Contracts\HasDisplayName;
 
-class ListsList extends Model implements HasDisplayName
+class ListsListItem extends Model implements HasDisplayName
 {
-    protected $table = 'lists_lists';
+    protected $table = 'lists_list_items';
 
     protected $fillable = [
         'uuid',
-        'board_id',
-        'name',
+        'list_id',
+        'title',
         'description',
         'order',
-        'user_id',
-        'team_id',
         'done',
         'done_at',
     ];
@@ -40,34 +38,19 @@ class ListsList extends Model implements HasDisplayName
             $model->uuid = $uuid;
             
             if (!$model->order) {
-                $maxOrder = self::where('board_id', $model->board_id)->max('order') ?? 0;
+                $maxOrder = self::where('list_id', $model->list_id)->max('order') ?? 0;
                 $model->order = $maxOrder + 1;
             }
         });
     }
 
-    public function board(): BelongsTo
+    public function list(): BelongsTo
     {
-        return $this->belongsTo(ListsBoard::class, 'board_id');
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(\Platform\Core\Models\User::class);
-    }
-
-    public function team(): BelongsTo
-    {
-        return $this->belongsTo(\Platform\Core\Models\Team::class);
-    }
-
-    public function items()
-    {
-        return $this->hasMany(ListsListItem::class, 'list_id')->orderBy('order');
+        return $this->belongsTo(ListsList::class, 'list_id');
     }
 
     public function getDisplayName(): ?string
     {
-        return $this->name;
+        return $this->title;
     }
 }

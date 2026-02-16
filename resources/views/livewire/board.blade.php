@@ -43,29 +43,44 @@
                     @endcan
                 </div>
                 
-                {{-- Listen Grid --}}
+                {{-- Sortierbare Listen --}}
                 @if($lists->count() > 0)
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        @foreach($lists as $list)
-                            <a href="{{ route('lists.lists.show', $list) }}" class="group relative overflow-hidden rounded-xl border border-[var(--ui-border)]/60 shadow-sm hover:shadow-md transition-all duration-300 bg-white">
-                                <div class="p-6">
-                                    <div class="flex items-start justify-between gap-3 mb-3">
-                                        <div class="flex-1 min-w-0">
-                                            <h3 class="text-lg font-bold text-[var(--ui-secondary)] mb-1 truncate">{{ $list->name }}</h3>
-                                            @if($list->description)
-                                                <p class="text-sm text-[var(--ui-muted)] line-clamp-2">{{ $list->description }}</p>
-                                            @endif
+                    <div 
+                        wire:sortable="updateListOrder" 
+                        wire:sortable.options="{ animation: 150 }"
+                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+                    >
+                        @foreach($lists->sortBy('order') as $list)
+                            <div 
+                                wire:sortable.item="{{ $list->id }}" 
+                                wire:key="list-{{ $list->id }}"
+                                class="group relative"
+                            >
+                                <a href="{{ route('lists.lists.show', $list) }}" class="block overflow-hidden rounded-xl border border-[var(--ui-border)]/60 shadow-sm hover:shadow-md transition-all duration-300 bg-white">
+                                    <div class="p-6">
+                                        <div class="flex items-start justify-between gap-3 mb-3">
+                                            <div class="flex-1 min-w-0">
+                                                <h3 class="text-lg font-bold text-[var(--ui-secondary)] mb-1 truncate">{{ $list->name }}</h3>
+                                                @if($list->description)
+                                                    <p class="text-sm text-[var(--ui-muted)] line-clamp-2">{{ $list->description }}</p>
+                                                @endif
+                                            </div>
+                                            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--ui-primary)]/10 to-[var(--ui-primary)]/5 flex items-center justify-center flex-shrink-0">
+                                                @svg('heroicon-o-list-bullet', 'w-5 h-5 text-[var(--ui-primary)]')
+                                            </div>
                                         </div>
-                                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--ui-primary)]/10 to-[var(--ui-primary)]/5 flex items-center justify-center flex-shrink-0">
-                                            @svg('heroicon-o-list-bullet', 'w-5 h-5 text-[var(--ui-primary)]')
+                                        <div class="flex items-center gap-2 text-xs text-[var(--ui-muted)]">
+                                            <span>Erstellt {{ $list->created_at->format('d.m.Y') }}</span>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-2 text-xs text-[var(--ui-muted)]">
-                                        <span>Erstellt {{ $list->created_at->format('d.m.Y') }}</span>
+                                    <div class="absolute inset-0 bg-gradient-to-r from-[var(--ui-primary)]/0 to-[var(--ui-primary)]/0 group-hover:from-[var(--ui-primary)]/5 group-hover:to-transparent transition-all duration-300 pointer-events-none"></div>
+                                </a>
+                                @can('update', $board)
+                                    <div wire:sortable.handle class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity cursor-move p-2 bg-white rounded-lg shadow-sm border border-[var(--ui-border)]/60 hover:border-[var(--ui-primary)]/60 z-10" title="Zum Verschieben ziehen">
+                                        @svg('heroicon-o-bars-3', 'w-4 h-4 text-[var(--ui-muted)] hover:text-[var(--ui-primary)]')
                                     </div>
-                                </div>
-                                <div class="absolute inset-0 bg-gradient-to-r from-[var(--ui-primary)]/0 to-[var(--ui-primary)]/0 group-hover:from-[var(--ui-primary)]/5 group-hover:to-transparent transition-all duration-300"></div>
-                            </a>
+                                @endcan
+                            </div>
                         @endforeach
                     </div>
                 @else

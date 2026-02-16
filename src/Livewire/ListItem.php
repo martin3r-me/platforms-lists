@@ -14,7 +14,7 @@ class ListItem extends Component
 
     public function mount(ListsList $listsList)
     {
-        $this->list = $listsList->fresh();
+        $this->list = $listsList->fresh()->load('items');
         
         // Berechtigung prüfen
         $this->authorize('view', $this->list);
@@ -24,6 +24,7 @@ class ListItem extends Component
     public function updateList()
     {
         $this->list->refresh();
+        $this->list->load('items');
     }
 
     public function rules(): array
@@ -73,6 +74,77 @@ class ListItem extends Component
             $field = str_replace('list.', '', $propertyName);
             $this->validateOnly("list.$field");
         }
+    }
+
+    public function updateItemOrder($items)
+    {
+        $this->authorize('update', $this->list);
+        
+        foreach ($items as $item) {
+            $listItem = $this->list->items()->find($item['value']);
+            if ($listItem) {
+                $listItem->update(['order' => $item['order']]);
+            }
+        }
+        
+        $this->list->refresh();
+        $this->list->load('items');
+    }
+
+    public function createItem()
+    {
+        $this->authorize('update', $this->list);
+        
+        $item = \Platform\Lists\Models\ListsListItem::create([
+            'list_id' => $this->list->id,
+            'title' => 'Neues Element',
+            'description' => null,
+        ]);
+        
+        $this->list->refresh();
+        $this->list->load('items');
+    }
+
+    public function toggleItemDone($itemId)
+    {
+        $this->authorize('update', $this->list);
+        
+        $item = $this->list->items()->find($itemId);
+        if ($item) {
+            $item->done = !$item->done;
+            $item->done_at = $item->done ? now() : null;
+            $item->save();
+        }
+        
+        $this->list->refresh();
+        $this->list->load('items');
+    }
+
+    public function deleteItem($itemId)
+    {
+        $this->authorize('update', $this->list);
+        
+        $item = $this->list->items()->find($itemId);
+        if ($item) {
+            $item->delete();
+        }
+        
+        $this->list->refresh();
+        $this->list->load('items');
+    }
+
+    public function updateItemTitle($itemId, $title)
+    {
+        $this->authorize('update', $this->list);
+        
+        $item = $this->list->items()->find($itemId);
+        if ($item) {
+            $item->title = $title;
+            $item->save();
+        }
+        
+        $this->list->refresh();
+        $this->list->load('items');
     }
 
     public function render()
