@@ -15,7 +15,17 @@ return [
 
     'sidebar' => [
         [
-            'group' => 'Listen',
+            'group' => 'Allgemein',
+            'items' => [
+                [
+                    'label' => 'Dashboard',
+                    'route' => 'lists.dashboard',
+                    'icon'  => 'heroicon-o-home',
+                ],
+            ],
+        ],
+        [
+            'group' => 'Boards',
             'dynamic' => [
                 'model'     => \Platform\Lists\Models\ListsBoard::class,
                 'team_based' => true,

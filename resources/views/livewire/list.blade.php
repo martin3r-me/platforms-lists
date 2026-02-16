@@ -54,7 +54,7 @@
                             <div 
                                 wire:sortable.item="{{ $item->id }}" 
                                 wire:key="item-{{ $item->id }}"
-                                class="group flex items-center gap-3 p-4 bg-[var(--ui-muted-5)] border border-[var(--ui-border)]/60 rounded-lg hover:border-[var(--ui-border)] hover:bg-[var(--ui-muted)] transition-all"
+                                class="group flex items-center gap-3 p-4 bg-white border border-[var(--ui-border)]/60 rounded-lg hover:border-[var(--ui-border)] hover:bg-[var(--ui-muted-5)] transition-all"
                             >
                                 {{-- Drag Handle --}}
                                 @can('update', $list)
