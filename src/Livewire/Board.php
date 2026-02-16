@@ -19,11 +19,34 @@ class Board extends Component
         $this->authorize('view', $this->board);
     }
 
-    #[On('updateBoard')] 
+    #[On('updateBoard')]
     public function updateBoard()
     {
         $this->board->refresh();
         $this->board->load('lists');
+    }
+
+    public function updateBoardName($name)
+    {
+        $this->authorize('update', $this->board);
+
+        $name = trim($name);
+        if ($name === '' || $name === $this->board->name) {
+            return;
+        }
+
+        $this->board->update(['name' => $name]);
+        $this->board->refresh();
+
+        $this->dispatch('updateSidebar');
+
+        $this->dispatch('notifications:store', [
+            'title' => 'Board umbenannt',
+            'message' => "Board wurde in '{$name}' umbenannt.",
+            'notice_type' => 'success',
+            'noticable_type' => get_class($this->board),
+            'noticable_id'   => $this->board->getKey(),
+        ]);
     }
 
     public function updateListOrder($items)

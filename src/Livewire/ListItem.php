@@ -20,11 +20,35 @@ class ListItem extends Component
         $this->authorize('view', $this->list);
     }
 
-    #[On('updateList')] 
+    #[On('updateList')]
     public function updateList()
     {
         $this->list->refresh();
         $this->list->load('items');
+    }
+
+    public function updateListName($name)
+    {
+        $this->authorize('update', $this->list);
+
+        $name = trim($name);
+        if ($name === '' || $name === $this->list->name) {
+            return;
+        }
+
+        $this->list->update(['name' => $name]);
+        $this->list->refresh();
+        $this->list->load('items');
+
+        $this->dispatch('updateSidebar');
+
+        $this->dispatch('notifications:store', [
+            'title' => 'Liste umbenannt',
+            'message' => "Liste wurde in '{$name}' umbenannt.",
+            'notice_type' => 'success',
+            'noticable_type' => get_class($this->list),
+            'noticable_id'   => $this->list->getKey(),
+        ]);
     }
 
     public function rules(): array

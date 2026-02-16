@@ -14,7 +14,18 @@
         {{-- Header Section --}}
         <div class="bg-white rounded-xl border border-[var(--ui-border)]/60 shadow-sm overflow-hidden">
             <div class="p-6 lg:p-8">
-                <h1 class="text-3xl font-bold text-[var(--ui-secondary)] mb-4 tracking-tight leading-tight">{{ $board->name }}</h1>
+                @can('update', $board)
+                    <input
+                        type="text"
+                        value="{{ $board->name }}"
+                        wire:blur="updateBoardName($event.target.value)"
+                        wire:keydown.enter="$event.target.blur()"
+                        class="text-3xl font-bold text-[var(--ui-secondary)] mb-4 tracking-tight leading-tight bg-transparent border-none p-0 w-full focus:outline-none focus:ring-0 hover:bg-[var(--ui-muted-5)] focus:bg-[var(--ui-muted-5)] rounded transition-colors"
+                        placeholder="Board-Name..."
+                    >
+                @else
+                    <h1 class="text-3xl font-bold text-[var(--ui-secondary)] mb-4 tracking-tight leading-tight">{{ $board->name }}</h1>
+                @endcan
                 @if($board->description)
                     <p class="text-[var(--ui-secondary)]">{{ $board->description }}</p>
                 @endif
