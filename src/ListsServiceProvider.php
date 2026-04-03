@@ -43,6 +43,7 @@ class ListsServiceProvider extends ServiceProvider
             PlatformCore::registerModule([
                 'key'        => 'lists',
                 'title'      => 'Listen',
+                'group'      => 'planning',
                 'routing'    => config('lists.routing'),
                 'guard'      => config('lists.guard'),
                 'navigation' => config('lists.navigation'),
